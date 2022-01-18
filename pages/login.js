@@ -3,25 +3,39 @@ import { useState, useEffect, useContext } from 'react';
 import { Card, Container, Grid, Form, Icon, Input } from 'semantic-ui-react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { Context } from "../context";
+import { userRouter, useRouter } from 'next/router';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // state 
+    const {state, dispatch} = useContext(Context);
+
+    const router = useRouter();
+
     const handleSubmit = async e => {
         e.preventDefault();
-        setLoading(true);
-
+      
         try {
+            setLoading(true);
             //const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API}/register`, {
             const { data } = await axios.post(`/api/login`, {
                 email,
                 password
             });
-            console.log('LOGIN RESPONSE:',data)
+            dispatch({
+                type: 'LOGIN',
+                payload: data,
+            });
             toast.success('Login Successful');
+            // save in local storage
+            window.localStorage.setItem('user', JSON.stringify(data));
             setLoading(false);
+            router.push('/')
+
         } catch (err) {
             toast.error(err.response.data);
             setLoading(false);
@@ -82,4 +96,5 @@ export default function LoginPage() {
             </Container>
         </Grid>
     );
-}
+
+};

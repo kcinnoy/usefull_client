@@ -1,4 +1,4 @@
-import {useReducer, createContext} from 'react';
+import {useReducer, createContext, useEffect} from 'react';
 
 // initial state
 const initialState =  {
@@ -9,10 +9,10 @@ const initialState =  {
 const Context = createContext() 
 
 // root recucer
-const rootReducer = (state, actions) => {
-    switch(actions.type) {
+const rootReducer = (state, action) => {
+    switch(action.type) {
         case 'LOGIN':
-            return {...StaticRange, user: action.payload};
+            return {...state, user: action.payload};
         case 'LOGOUT':
             return {...state, user: null };
         default:
@@ -22,6 +22,13 @@ const rootReducer = (state, actions) => {
 
 const Provider = ({children}) => {
     const [state, dispatch] = useReducer(rootReducer, initialState)
+
+    useEffect(() => {
+        dispatch({
+            type: 'LOGIN',
+            payload: JSON.parse(window.localStorage.getItem('user')),
+        });
+    }, []);
 
     return (
         <Context.Provider value={{state, dispatch}}>
