@@ -19,8 +19,8 @@ export default function LoginPage() {
                 email,
                 password
             });
-            //console.log('REGISTER RESPONSE',data)
-            toast.success('Registration Successful');
+            console.log('LOGIN RESPONSE:',data)
+            toast.success('Login Successful');
             setLoading(false);
         } catch (err) {
             toast.error(err.response.data);
@@ -40,7 +40,7 @@ export default function LoginPage() {
                     <Card.Content>
                         <Card.Header>
                             <Icon name='user circle' />
-                            Register
+                            Login
                         </Card.Header>
                         {/* <ToastContainer /> */}
                     </Card.Content>
@@ -69,7 +69,7 @@ export default function LoginPage() {
                             <Form.Button
                                 fluid
                                 loading={loading}
-                                disabled={!username || !email || !password || loading}
+                                disabled={!email || !password}
                             >
                                 Login
                             </Form.Button>

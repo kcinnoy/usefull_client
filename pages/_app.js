@@ -7,14 +7,15 @@ import 'antd/dist/antd.css';
 import '../public/css/styles.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {Provider} from '../context'
 
 function MyApp({ Component, pageProps }) {
     return (
-        <>  
+        <Provider>  
             <ToastContainer position='top-right'/>
             <NavBar />
             <Component {...pageProps} />
-        </>
+        </Provider>
     );
 }
 
