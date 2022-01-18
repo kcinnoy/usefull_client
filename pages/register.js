@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useState, useEffect, useContext } from 'react';
 import { Card, Container, Grid, Form, Icon, Input } from 'semantic-ui-react';
+import axios from 'axios';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
@@ -8,20 +9,22 @@ export default function RegisterPage() {
     const [password, setPassword] = useState('');
     
     
-    const handleSubmit =(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.table({username,email, password});
+        //console.table({username,email, password});
+        const {data} = await axios.post(`http://localhost:8000/api/register`, {username, email, password});
+        console.log('REGISTER RESPONSE',data)
     }
 
     return (
-        <Grid padding>
+        <Grid padding='true'>
             <Grid.Row centered>
                 <Container >
                     <h1> Register</h1>
                 </Container>
             </Grid.Row>
             <Container>
-            <Card ui centered style={{ marginTop: 30 }}>
+            <Card ui='true' centered style={{ marginTop: 30 }}>
                 <Card.Content>
                     <Card.Header>
                         <Icon name='user circle' />
