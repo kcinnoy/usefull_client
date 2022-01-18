@@ -15,7 +15,8 @@ export default function RegisterPage() {
         setLoading(true);
 
         try {
-            const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API}/register`, {
+            //const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API}/register`, {
+            const { data } = await axios.post(`/api/register`, {
                 username,
                 email,
                 password
@@ -63,7 +64,7 @@ export default function RegisterPage() {
                                 id='email'
                                 //name='name'
                                 label='Email Address'
-                                placeholder='Enter emial'
+                                placeholder='Enter email'
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                             />
@@ -87,7 +88,7 @@ export default function RegisterPage() {
                         </Form>
                     </Card.Content>
                     <Card.Content>
-                        Already have an account? &nbsp; <Link href='/account/login'>Login</Link>
+                        Already have an account? &nbsp; <Link href='/login'>Login</Link>
                     </Card.Content>
                 </Card>
             </Container>
