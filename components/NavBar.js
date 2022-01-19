@@ -1,13 +1,18 @@
 
 import Link from 'next/link';
-import {useState, useEffect, useContext} from 'react';
+import { useState, useEffect, useContext } from 'react';
 // import styles from '@/styles/Navbar.module.css';
 import { Menu, Container, Grid, Icon } from 'semantic-ui-react';
 // import Search from './Search';
 // import AuthContext from '@/context/AuthContext';
+import { Context } from '../context';
+import  axios from 'axios';
+import { toast } from 'react-toastify';
+import Router, { useRouter } from 'next/router';
 
 export default function Navbar() {
-    // const {user, logout} = useContext(AuthContext)
+    const {state, dispatch} = useContext(Context)
+    const router = useRouter()
 
     const [activeItem, setActiveItem] = useState('');
 
@@ -15,6 +20,14 @@ export default function Navbar() {
        process.browser && setActiveItem(window.location.pathname);
        console.log(window.location.pathname);
     }, [process.browser && window.location.pathname ])
+
+    const logout = async () => {
+        dispatch({ type: "LOGOUT" });
+        window.localStorage.removeItem("user");
+        const { data } = await axios.get("/api/logout");
+        toast(data.message);
+        router.push("/login");
+      };
 
     return (
         <Grid padded>
@@ -44,6 +57,8 @@ export default function Navbar() {
                         Events
                     </Menu.Item>
                 </Link>
+
+                <Menu.Menu position='right'>
                 <Link href='/login' passHref>
                     <Menu.Item
                         name='login' 
@@ -56,6 +71,16 @@ export default function Navbar() {
                         Login
                     </Menu.Item>
                 </Link>
+                <Menu.Item
+                        name='logout' 
+                        as='a' 
+                        header
+                        //active={activeItem === '/'+'login'}
+                        onClick={logout}
+                    >
+                    <Icon name='user circle' />
+                        Logout
+                    </Menu.Item>
                 <Link href='/register' passHref>
                     <Menu.Item
                         name='register' 
@@ -68,6 +93,7 @@ export default function Navbar() {
                         Register
                     </Menu.Item>
                 </Link>
+                </Menu.Menu>
                 
             </Container>
         </Menu>
