@@ -2,17 +2,18 @@
 import Link from 'next/link';
 import { useState, useEffect, useContext } from 'react';
 // import styles from '@/styles/Navbar.module.css';
-import { Menu, Container, Grid, Icon } from 'semantic-ui-react';
+import { Menu, Container, Grid, Icon, Dropdown } from 'semantic-ui-react';
 // import Search from './Search';
 // import AuthContext from '@/context/AuthContext';
 import { Context } from '../context';
 import  axios from 'axios';
 import { toast } from 'react-toastify';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 export default function Navbar() {
-    const {state, dispatch} = useContext(Context)
-    const router = useRouter()
+    const {state, dispatch} = useContext(Context);
+    const {user} = state; 
+    const router = useRouter();
 
     const [activeItem, setActiveItem] = useState('');
 
@@ -58,6 +59,8 @@ export default function Navbar() {
                     </Menu.Item>
                 </Link>
 
+                { !user ? (
+
                 <Menu.Menu position='right'>
                 <Link href='/login' passHref>
                     <Menu.Item
@@ -71,16 +74,6 @@ export default function Navbar() {
                         Login
                     </Menu.Item>
                 </Link>
-                <Menu.Item
-                        name='logout' 
-                        as='a' 
-                        header
-                        //active={activeItem === '/'+'login'}
-                        onClick={logout}
-                    >
-                    <Icon name='user circle' />
-                        Logout
-                    </Menu.Item>
                 <Link href='/register' passHref>
                     <Menu.Item
                         name='register' 
@@ -94,6 +87,47 @@ export default function Navbar() {
                     </Menu.Item>
                 </Link>
                 </Menu.Menu>
+
+                ) : (
+                // <Menu.Menu position='right'>
+                      
+                //     <Menu.Item
+                //         name='logout' 
+                //         as='a' 
+                //         header
+                //         //active={activeItem === '/'+'login'}
+                //         onClick={logout}
+                //     >
+                //     <Icon name='user circle' />
+                //         Logout
+                //     </Menu.Item>
+                // </Menu.Menu>
+                
+                <Menu.Menu position='right'>
+                <Dropdown 
+                    trigger={<span><Icon name='user'/>{user && user.username}</span>}
+                    //className='icon'
+                    //icon='edit'
+                    item
+                    // text={user && user.username}
+                >
+                {/* <Icon name='user circle' /> */}
+                <Dropdown.Menu>
+                    <Dropdown.Item 
+                        icon='user circle'
+                        text='Logout' 
+                        onClick={logout}
+                    />
+                    <Dropdown.Item icon='globe' text='Choose Language' />
+                    <Dropdown.Item icon='settings' text='Account Settings' />
+                </Dropdown.Menu>
+                
+                </Dropdown>
+                </Menu.Menu>
+
+                )}
+
+               
                 
             </Container>
         </Menu>
