@@ -4,7 +4,7 @@ import { Card, Container, Grid, Form, Icon, Input } from 'semantic-ui-react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { Context } from "../context";
-import { userRouter, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -12,9 +12,15 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
 
     // state 
-    const {state, dispatch} = useContext(Context);
+    const {state: {user}, dispatch} = useContext(Context);
+    //const {user} = state 
 
+    // router
     const router = useRouter();
+
+    useEffect(()=> {
+        if(user !== null) router.push('/');
+    }, [user])
 
     const handleSubmit = async e => {
         e.preventDefault();

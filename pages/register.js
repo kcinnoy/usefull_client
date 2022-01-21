@@ -3,12 +3,24 @@ import { useState, useEffect, useContext } from 'react';
 import { Card, Container, Grid, Form, Icon, Input } from 'semantic-ui-react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { Context } from "../context";
+import { useRouter } from 'next/router';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+
+    // state 
+    const {state: {user}, dispatch} = useContext(Context);
+    
+    // router
+    const router = useRouter();
+
+    useEffect(()=> {
+        if(user !== null) router.push('/');
+    }, [user])
 
     const handleSubmit = async e => {
         e.preventDefault();
