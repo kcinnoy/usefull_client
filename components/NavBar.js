@@ -118,7 +118,9 @@ export default function Navbar() {
                         text='Logout' 
                         onClick={logout}
                     />
-                    <Dropdown.Item icon='globe' text='Choose Language' />
+                    <Dropdown.Item 
+                        icon='globe'
+                        text='Dashboard' />
                     <Dropdown.Item icon='settings' text='Account Settings' />
                 </Dropdown.Menu>
                 

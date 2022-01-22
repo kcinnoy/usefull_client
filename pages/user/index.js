@@ -1,43 +1,21 @@
-import {useEffect, useState, useContext} from 'react';
+import { useContext} from 'react';
 import {Context} from '../../context';
-import axios from 'axios';
+import UserRoute from '../../components/routes/UserRoute';
 
-
-const userIndex = () => {
-    //state
-    const [hidden, setHidden] = useState(true);
-
+const UserIndex = () => {
+  
     const {
         state: {user},
     } = useContext(Context);
 
-    useEffect(() => {
-        fetchUser();
-    }, []);
-
-
-    const fetchUser = async () => {
-        try {
-          const { data } = await axios.get("/api/current-user");
-          console.log(data);
-          setHidden(false);
-        } catch (err) {
-          console.log(err);
-          setHidden(true);
-        }
-      };
-
     return (
-        <>
-            {!hidden && (
-                <div>
+        <UserRoute>
+                <>
                     <h1> USER PAGE </h1>
                     <pre> {JSON.stringify(user)}</pre>
-                </div>
-               )
-            }
-        </>
+                </>
+        </UserRoute>
     )
 };
 
-export default userIndex;
+export default UserIndex;
