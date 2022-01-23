@@ -31,9 +31,10 @@ export default function ForgotPasswordPage() {
         e.preventDefault();
         try {
             setLoading(true);
-            const {data } = await axios.post('/api/forgot-password, {email}');
+            const {data } = await axios.post('/api/forgot-password', {email});
             setSuccess(true);
             toast('Check your inbox (and spam folder) for reset code');
+            setLoading(false);
         } catch (err) {
             setLoading(false);
             toast(err.response.data)
@@ -81,7 +82,7 @@ export default function ForgotPasswordPage() {
                             <Form.Button
                                 fluid
                                 loading={loading}
-                                disabled={!email || !password || !loading}
+                                disabled={!email }
                             >
                                 Login
                             </Form.Button>
