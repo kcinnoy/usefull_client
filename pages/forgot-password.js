@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 export default function ForgotPasswordPage() {
     //state
     const [email,setEmail] = useState('');
-    const [success,setSuccess] = useState('');
+    const [success,setSuccess] = useState(false);
     const [resetCode,setResetCode] = useState('');
     const [newPassword,setNewPassword] = useState('');
     const [loading,setLoading] = useState(false);
@@ -41,6 +41,29 @@ export default function ForgotPasswordPage() {
         }
     };
 
+    const handleResetPassword = async (e) => {
+        e.preventDefault()
+        //console.log(email, resetCode, newPassword);
+        //return;
+        try {
+            setLoading(true)
+            const {data} = await axios.post('/api/reset-password', {
+                email, resetCode, newPassword,
+            });
+            setEmail('');
+            setResetCode('');
+            setNewPassword('');
+            toast('Success! Password has been updated.');
+            setLoading(false);
+            router.push('/login')
+
+        } catch (err) {
+            setLoading(false);
+            toast(err.response.data);
+            //toast('Invalid Reset code');
+        }
+    }
+
     return (
         <>
         <Grid padding='true'>
@@ -58,7 +81,7 @@ export default function ForgotPasswordPage() {
                         </Card.Header>
                     </Card.Content>
                     <Card.Content>
-                        <Form onSubmit={handleSubmit}>
+                        <Form onSubmit={success ? handleResetPassword : handleSubmit}>
                             <Form.Field
                                 type='email'
                                 control={Input}
@@ -69,22 +92,36 @@ export default function ForgotPasswordPage() {
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                             />
-                            {/* <Form.Field
-                                type='password'
-                                control={Input}
-                                id='password'
-                                //name='name'
-                                label='Password'
-                                ///placeholder=''
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                            /> */}
+                            {success && 
+                                <> 
+                                    <Form.Field
+                                        type='text'
+                                        control={Input}
+                                        id='resetcode'
+                                        //name='name'
+                                        label='Reset Code'
+                                        placeholder='Enter reset code. Check inbox'
+                                        value={resetCode}
+                                        onChange={e => setResetCode(e.target.value)}
+                                    /> 
+                                    <Form.Field
+                                        type='password'
+                                        control={Input}
+                                        id='newpassword'
+                                        //name='name'
+                                        label='New Password'
+                                        ///placeholder=''
+                                        value={newPassword}
+                                        onChange={e => setNewPassword(e.target.value)}
+                                    /> 
+                                </>}
+                            
                             <Form.Button
                                 fluid
                                 loading={loading}
                                 disabled={!email }
                             >
-                                Login
+                                {success ? 'Update Password' : 'Send reset code' }
                             </Form.Button>
                         </Form>
                     </Card.Content>

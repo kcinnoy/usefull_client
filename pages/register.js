@@ -35,7 +35,11 @@ export default function RegisterPage() {
             });
             //console.log('REGISTER RESPONSE',data)
             toast.success('Registration Successful');
+            setUsername('');
+            setEmail('');
+            setPassword('');
             setLoading(false);
+            router.push('/login');
         } catch (err) {
             toast.error(err.response.data);
             setLoading(false);
