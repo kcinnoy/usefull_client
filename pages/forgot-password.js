@@ -1,58 +1,51 @@
-import Link from 'next/link';
 import { useState, useEffect, useContext } from 'react';
-import { Card, Container, Grid, Form, Icon, Input } from 'semantic-ui-react';
-import axios from 'axios';
+import  axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import { Context } from "../context";
+import { Card, Container, Grid, Form, Icon, Input } from 'semantic-ui-react';
+import Link from 'next/link';
+import { Context } from '../context';
 import { useRouter } from 'next/router';
 
-export default function LoginPage() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
 
-    // state 
-    const {state: {user}, dispatch} = useContext(Context);
-    //const {user} = state 
 
+export default function ForgotPasswordPage() {
+    //state
+    const [email,setEmail] = useState('');
+    const [success,setSuccess] = useState('');
+    const [resetCode,setResetCode] = useState('');
+    const [newPassword,setNewPassword] = useState('');
+    const [loading,setLoading] = useState(false);
+
+    // context 
+    const {state: {user}} = useContext(Context)
     // router
     const router = useRouter();
 
-    useEffect(()=> {
-        if(user !== null) router.push('/');
-    }, [user])
+    // redirect if user logged in 
+    useEffect(() => {
+        if (user !== null) router.push('/');
+    }, []);
 
-    const handleSubmit = async e => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-      
         try {
             setLoading(true);
-            //const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API}/register`, {
-            const { data } = await axios.post(`/api/login`, {
-                email,
-                password
-            });
-            dispatch({
-                type: 'LOGIN',
-                payload: data,
-            });
-            toast.success('Login Successful');
-            // save in local storage
-            window.localStorage.setItem('user', JSON.stringify(data));
-            setLoading(false);
-            router.push('/')
-
+            const {data } = await axios.post('/api/forgot-password, {email}');
+            setSuccess(true);
+            toast('Check your inbox (and spam folder) for reset code');
         } catch (err) {
-            toast.error(err.response.data);
             setLoading(false);
+            toast(err.response.data)
         }
     };
 
     return (
+        <>
         <Grid padding='true'>
             <Grid.Row centered>
                 <Container>
-                    <h1> Login</h1>
+                    <h1> Reset Password</h1>
                 </Container>
             </Grid.Row>
             <Container>
@@ -60,9 +53,8 @@ export default function LoginPage() {
                     <Card.Content>
                         <Card.Header>
                             <Icon name='user circle' />
-                            Login
+                            Reset Password
                         </Card.Header>
-                        {/* <ToastContainer /> */}
                     </Card.Content>
                     <Card.Content>
                         <Form onSubmit={handleSubmit}>
@@ -76,7 +68,7 @@ export default function LoginPage() {
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                             />
-                            <Form.Field
+                            {/* <Form.Field
                                 type='password'
                                 control={Input}
                                 id='password'
@@ -85,11 +77,11 @@ export default function LoginPage() {
                                 ///placeholder=''
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
-                            />
+                            /> */}
                             <Form.Button
                                 fluid
                                 loading={loading}
-                                disabled={!email || !password}
+                                disabled={!email || !password || !loading}
                             >
                                 Login
                             </Form.Button>
@@ -102,6 +94,10 @@ export default function LoginPage() {
                 </Card>
             </Container>
         </Grid>
-    );
+
+        </>
+    )
+
 
 };
+
