@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
     // redirect if user logged in 
     useEffect(() => {
         if (user !== null) router.push('/');
-    }, []);
+    }, [user]);
 
 
     const handleSubmit = async (e) => {

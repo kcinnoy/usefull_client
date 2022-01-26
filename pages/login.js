@@ -40,7 +40,7 @@ export default function LoginPage() {
             // save in local storage
             window.localStorage.setItem('user', JSON.stringify(data));
             setLoading(false);
-            router.push('/')
+            router.push('/account')
 
         } catch (err) {
             toast.error(err.response.data);

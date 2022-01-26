@@ -85,7 +85,7 @@ export default function Navbar() {
                     <Icon name='user circle' />
                         Register
                     </Menu.Item>
-                </Link>
+                    </Link>
                 </Menu.Menu>
 
                 ) : (
@@ -118,10 +118,14 @@ export default function Navbar() {
                         text='Logout' 
                         onClick={logout}
                     />
+                    <Link href='/user' passHref>
                     <Dropdown.Item 
                         icon='globe'
-                        text='Dashboard' />
+                        text='Dashboard' 
+                    />
+                    </Link>
                     <Dropdown.Item icon='settings' text='Account Settings' />
+                    
                 </Dropdown.Menu>
                 
                 </Dropdown>

@@ -42,7 +42,7 @@ const Provider = ({children}) => {
             return response;
         }, 
         function (error) {
-            // non 2xx status codes will be a trigger
+            // non 4xx status codes will be a trigger
             let res = error.response;
             if(res.status === 401 && res.config && !res.config.__isRetryRequest) {
                 return new Promise((resolve, reject) => {
