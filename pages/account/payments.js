@@ -5,7 +5,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { Context } from '../../context';
 import { useRouter } from 'next/router';
-import AccountRoute from '../../components/routes/AccountRoute';
+//import AccountRoute from '../../components/routes/AccountRoute';
 
 export default function PaymentsPage() {
     const [loading, setLoading] = useState(false);

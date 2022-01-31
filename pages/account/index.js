@@ -2,7 +2,7 @@ import { useContext} from 'react';
 import {Context} from '../../context';
 import AccountRoute from '../../components/routes/AccountRoute';
 
-const UserIndex = () => {
+const AccountIndex = () => {
   
     const {
         state: {user},
@@ -11,11 +11,11 @@ const UserIndex = () => {
     return (
         <AccountRoute>
                 <>
-                    <h1> USER PAGE </h1>
+                    <h1> Account Page </h1>
                     <pre> {JSON.stringify(user)}</pre>
                 </>
         </AccountRoute>
     )
 };
 
-export default UserIndex;
+export default AccountIndex;

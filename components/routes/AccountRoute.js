@@ -15,13 +15,13 @@ const AccountRoute = ({ children }) => {
 
 
     useEffect(() => {
-        fetchUser();
+        fetchAccount();
     }, []);
 
 
-    const fetchUser = async () => {
+    const fetchAccount = async () => {
         try {
-          const { data } = await axios.get("/api/current-user");
+          const { data } = await axios.get("/api/current-account");
           console.log(data);
           if (data.ok) setHiddenView(false);
         } catch (err) {
