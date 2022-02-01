@@ -8,7 +8,7 @@ const options = [
 ];
 
 const CreateLinkcardForm = ({
-    handleSubmit, handleImage, handleChange, values, setValues, preview
+    handleSubmit, handleImage, handleChange, values, setValues, preview, fileName
 }) => (
 
         <div>
