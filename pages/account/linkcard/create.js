@@ -20,13 +20,19 @@ export default function CreateLinkCard() {
         paid: true,
         loading: false
     });
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState({});
     const [preview, setPreview] = useState('');
     const [fileName, setFileName] = useState('');
+
+    const router = useRouter();
 
     const handleChange = e => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
+
+    //const onSelectChange = (evt, data) => {
+        //console.log( data.value);
+    //}
 
     const handleImage = e => {
         let file = e.target.files[0];
@@ -40,12 +46,11 @@ export default function CreateLinkCard() {
                 let {data} = await axios.post('/api/linkcard/upload-image', {
                     image: uri,
                 });
-                console.log('image', data);
+                //console.log('image', data);
+                setImage(data)
                 setValues({...values, loading:false});
-
-
             } catch (err) {
-                console.log(err)
+                //console.log(err)
                 setValues({...values, loading: false})
                 toast('Image upload fail')
             }
@@ -53,10 +58,37 @@ export default function CreateLinkCard() {
         
     };
 
-    const handleSubmit = e => {
+    const handleImageRemove = async (e) => {
+        //console.log('remove image ')
         e.preventDefault();
-        console.log(values);
-    };
+        try {
+            setValues({...values, loading: true})
+            const res = await axios.post('/api/linkcard/remove-image', {image})
+            setImage({})
+            setPreview('')
+            setFileName('')
+            setValues({...values, loading: false})
+        } catch (err) {
+            //console.log(err)
+            setValues({...values, loading: false})
+            toast('Image upload fail')
+        }
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+          //console.log(values);
+          const { data } = await axios.post("/api/linkcard", {
+            ...values,
+            image,
+          });
+          toast("Great! You've created a link card, now you can custumize it");
+          router.push("/account");
+        } catch (err) {
+          toast(err.response.data);
+        }
+      };
 
     return (
         <>
@@ -70,6 +102,8 @@ export default function CreateLinkCard() {
                     setValues={setValues}
                     preview={preview}
                     fileName={fileName}
+                    handleImageRemove={handleImageRemove}
+                    //onSelectChange={onSelectChange}
                 />
             </div>
         </>

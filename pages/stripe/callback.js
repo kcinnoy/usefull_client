@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 //import AccountRoute from '../../components/routes/AccountRoute';
 
 const StripeCallback = () => {
-    const {state: {user}} = useContext(Context)
+    const {state: {user}, dispatch,} = useContext(Context)
 
     useEffect(() => {
         if(user) {

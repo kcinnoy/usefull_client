@@ -41,7 +41,7 @@ const AccountRoute = ({ children }) => {
               </Dimmer>
           </div>)
             : (
-               <Grid conatiner centered>
+               <Grid container centered>
                 <Grid.Row>
                     <AccountGrid/>
                 </Grid.Row>

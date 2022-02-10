@@ -8,7 +8,7 @@ const options = [
 ];
 
 const CreateLinkcardForm = ({
-    handleSubmit, handleImage, handleChange, values, setValues, preview, fileName
+    handleSubmit, handleImage, handleChange, values, setValues, preview, fileName, handleImageRemove, 
 }) => (
 
         <div>
@@ -19,7 +19,7 @@ const CreateLinkcardForm = ({
             </Container>
         </Grid.Row>
         <Container>
-                    <Form >
+                    <Form onSubmit={handleSubmit}>
                     <Segment secondary >
                     <Label attached='top left'>Name</Label>
                         <Form.Field
@@ -41,7 +41,7 @@ const CreateLinkcardForm = ({
                             //type='textarea'
                             control={TextArea}
                             id='description'
-                            //name='name'
+                            name='description'
                             //label='Description'
                             placeholder='Description'
                             value={values.description}
@@ -54,8 +54,8 @@ const CreateLinkcardForm = ({
                             //inline
                             type='text'
                             control={Input}
-                            id='Category'
-                            //name='name'
+                            id='category'
+                            name='category'
                             //label='Description'
                             placeholder='Category'
                             value={values.category}
@@ -70,7 +70,7 @@ const CreateLinkcardForm = ({
                             label='Free'
                             value='Free'
                             checked={values.paid === false}
-                            onChange={v => setValues({...values, paid: !values.paid})}
+                            onChange={v => setValues({...values, paid: !values.paid, price: 0})}
                         />
                         <Form.Field
                             control={Radio}
@@ -82,9 +82,11 @@ const CreateLinkcardForm = ({
                         {values.paid &&
                         <Form.Select
                             fluid
-                            //label='Gender'
                             options={options}
                             placeholder='Set Price'
+                            value={values.price}
+                            onChange={(e, data) => setValues({ ...values, price: data.value})}
+                            //onChange={onSelectChange}
                         />
                         }
                     </Form.Group>     
@@ -105,7 +107,23 @@ const CreateLinkcardForm = ({
                             onChange={handleImage}
                         />
                          {preview && (
-                        <Image src={preview} size='medium' size='tiny' rounded/>
+                           
+                            <Image 
+                                onClick={(e) => {
+                                    if (e.target.nodeName === "IMG") {
+                                      //console.log('image clicked');
+                                    } else {
+                                      handleImageRemove(e);
+                                    }
+                                  }}
+                                src={preview}
+                                size='medium'
+                                size='tiny'
+                                label={{ as: 'a', corner: 'right', icon: 'remove circle'} }
+                                rounded
+                            />
+                           
+                          
                         //'Image goes here'
                     )}
 
