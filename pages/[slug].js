@@ -33,7 +33,7 @@ const LinkcardView = () => {
     const [showcaseValues, setShowcaseValues] = useState({
         title: '',
         content: '',
-        video: ''
+        video: {}
     });
 
     //showcase state upload
@@ -69,7 +69,7 @@ const LinkcardView = () => {
             videoData.append('video', file)
 
             // progress bar and send video as form data to backend
-            const {data} = await axios.post('/api/linkcard/video-upload', videoData, {
+            const {data} = await axios.post(`/api/linkcard/video-upload/${linkcard.account._id}`, videoData, {
                 onUploadProgress: (e) => {
                     setProgress(Math.round((100 * e.loaded) / e.total))
                 }
@@ -83,6 +83,27 @@ const LinkcardView = () => {
             setUploading(false)
             console.log(err);
             toast('Video upload failed');
+        }
+    };
+
+    const handleRemoveShowcase = async () => {
+        try {
+            setUploading(true);
+            const {data} = await axios.post(
+                `/api/linkcard/video-remove/${linkcard.account._id}`, 
+                showcaseValues.video
+            );
+            //console.log(data)
+            setShowcaseValues({...showcaseValues, video: {}})
+            setProgress(0);
+            setUploadButtonText('Upload Media')
+            setUploading(false);
+
+            
+        } catch (err) {
+            setUploading(false)
+            console.log(err);
+            toast('Video remove failed');
         }
     }
 
@@ -137,7 +158,7 @@ const LinkcardView = () => {
                                             onOpen={() => setModalVisible(true)}
                                             open={modalVisible}
                                             trigger={<Button>Add Media</Button>}
-                                            dimmer='blurring'
+                                            //dimmer='blurring'
                                         >
                                             <Modal.Header>
                                                 Add Showcase Items
@@ -153,6 +174,8 @@ const LinkcardView = () => {
                                                     uploading={uploading}
                                                     uploadButtonText={uploadButtonText}
                                                     handleMedia={handleMedia}
+                                                    progress={progress}
+                                                    handleRemoveShowcase={handleRemoveShowcase}
                                                 />
                                             </Modal.Content>
                                         </Modal>

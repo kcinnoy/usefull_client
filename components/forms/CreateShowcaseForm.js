@@ -12,7 +12,8 @@ import {
     Icon,
     Image,
     Placeholder,
-    Modal
+    Modal,
+    Progress,
 } from 'semantic-ui-react';
 
 export default function CreateShowcaseForm({
@@ -22,11 +23,16 @@ export default function CreateShowcaseForm({
     uploading,
     uploadButtonText,
     handleMedia,
+    progress,
+    handleRemoveShowcase,
 }) {
     return (
         <Container>
+         
             <Form onSubmit={handleAddShowcase}>
+            
                 <Form.Field
+                    width={16}
                     type='text'
                     control={Input}
                     id='title'
@@ -36,6 +42,7 @@ export default function CreateShowcaseForm({
                     value={showcaseValues.title}
                     onChange={e => setShowcaseValues({ ...showcaseValues, title: e.target.value })}
                 />
+                
                 <Form.Field
                     type='TextArea'
                     control={Input}
@@ -48,13 +55,35 @@ export default function CreateShowcaseForm({
                         setShowcaseValues({ ...showcaseValues, content: e.target.value })
                     }
                 />
+                <Grid>
+                <Grid.Row>
+                    <Grid.Column width={8}>
 
-                <Button as='label' htmlFor='file' type='button'>
+               { !showcaseValues.video.Location &&
+                   (<Button as='label' htmlFor='file' type='button'>
                     <Button.Content visible>
                         <Icon name='file' />
                     </Button.Content>
-                    <Button.Content hidden>{uploadButtonText}</Button.Content>
-                </Button>
+                    <Button.Content >{uploadButtonText}</Button.Content>
+                </Button>)}
+                {!uploading && showcaseValues.video.Location &&
+                    <Label as='a' onClick={handleRemoveShowcase}>
+                        {uploadButtonText}
+                        <Icon name='delete' />
+                    </Label>
+                }
+                { progress > 0 && 
+                    <Progress
+                    style={{ marginTop: 10 }}
+                        percent={progress}
+                        color='olive'
+                 
+                    />
+                        
+                }
+                </Grid.Column >
+                <Grid.Column width={8} textAlign='right'>
+             
                 <Input type='file' accept='video/*' id='file' hidden onChange={handleMedia} />
                 <Form.Button
                     content='Submit'
@@ -62,7 +91,13 @@ export default function CreateShowcaseForm({
                     loading={uploading}
                     //disabled={!email || !password}
                 />
+                </Grid.Column>
+
+               
+                </Grid.Row>
+                </Grid>
             </Form>
+      
         </Container>
     );
 }
