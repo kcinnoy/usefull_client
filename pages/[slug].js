@@ -54,9 +54,23 @@ const LinkcardView = () => {
         console.log(linkcard);
     };
 
-    const handleAddShowcase = e => {
+    const handleAddShowcase = async (e) => {
         e.preventDefault();
-        console.log(showcaseValues);
+        //console.log(showcaseValues);
+
+        try {
+        const { data } = await axios.post(`/api/linkcard/showcase/${slug}/${linkcard.account._id}`,showcaseValues );
+        
+        setShowcaseValues({...showcaseValues, title: '', content: '', video: {}});
+        setModalVisible(false);
+        setUploadButtonText('Upload Media');
+        setLinkcard(data);
+        toast('Showcase item added')
+
+        } catch (err) {
+            console.log(err);
+            toast('Showcase creation failed');
+        }
     };
 
     const handleMedia = async (e) => {
