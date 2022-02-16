@@ -8,6 +8,7 @@ import {
     Container,
     Grid,
     Header,
+    List,
     Form,
     Radio,
     Segment,
@@ -40,18 +41,29 @@ const LinkcardView = () => {
     const [uploading, setUploading] = useState(false);
     const [uploadButtonText, setUploadButtonText] = useState('Upload Media')
     const [progress, setProgress] = useState(0);
+    const [showCases, setShowCases] = useState(false);
 
     const router = useRouter();
     const { slug } = router.query;
+    //console.log('this:',slug);
 
     useEffect(() => {
         loadLinkcard();
     }, [slug]);
 
+   
     const loadLinkcard = async () => {
+        try {
         const { data } = await axios.get(`/api/linkcard/${slug}`);
         setLinkcard(data);
-        console.log(linkcard);
+        setShowCases(true);      
+        console.log('asnc:', data);
+        console.log(linkcard)
+        // console.log(linkcard.showcases)
+        // console.log(showCases)
+        } catch (err) {
+            console.log(err,'did not get linkcard data');
+        }
     };
 
     const handleAddShowcase = async (e) => {
@@ -89,6 +101,7 @@ const LinkcardView = () => {
                 }
             })
             console.log(data)
+            setImage(data);
             setShowcaseValues({...showcaseValues, video: data})
             setUploading(false)
 
@@ -124,81 +137,122 @@ const LinkcardView = () => {
     return (
         <AccountRoute>
             <div>
-                <Container text>
-                    <Segment.Group>
-                        <Segment>
-                            <Grid>
-                                <Grid.Row>
-                                    <Grid.Column width={4}>
-                                        <Image
-                                            src={linkcard.image ? linkcard.image.Location : '/'}
-                                            size='tiny'
-                                        />
-                                    </Grid.Column>
-                                    <Grid.Column width={12} textAlign='left'>
-                                        <Header size='small'>
-                                            <span>
-                                                {linkcard.name}
-                                                <span style={{ marginLeft: 10 }}>
-                                                    <Icon name='edit outline' color='blue' />
-                                                    <Icon
-                                                        name='check square outline'
-                                                        color='green'
-                                                    />
-                                                </span>
-                                            </span>
-                                        </Header>
-                                        <Placeholder>
-                                            <Placeholder.Line />
-                                            <Placeholder.Line />
-                                            <Placeholder.Line />
-                                        </Placeholder>
-                                    </Grid.Column>
-                                </Grid.Row>
-                                <Grid.Row>
-                                    <Grid.Column width={16} textAlign='left'>
-                                        <ReactMarkdown children={linkcard.description} />
-                                        <Placeholder fluid>
-                                            <Placeholder.Line />
-                                            <Placeholder.Line />
-                                            <Placeholder.Line />
-                                        </Placeholder>
-                                    </Grid.Column>
-                                </Grid.Row>
-                                <Grid.Row>
-                                    <Grid.Column>
-                                        <Modal
-                                            onClose={() => setModalVisible(false)}
-                                            onOpen={() => setModalVisible(true)}
-                                            open={modalVisible}
-                                            trigger={<Button>Add Media</Button>}
-                                            //dimmer='blurring'
-                                        >
-                                            <Modal.Header>
-                                                Add Showcase Items
-                                                <Button floated='right' circular basic compact fitted size='mini' onClick={() => setModalVisible(false)}>
-                                                    <Icon name='close'/>
-                                                </Button>
-                                            </Modal.Header>
-                                            <Modal.Content>
-                                                <CreateShowcaseForm
-                                                    showcaseValues={showcaseValues}
-                                                    setShowcaseValues={setShowcaseValues}
-                                                    handleAddShowcase={handleAddShowcase}
-                                                    uploading={uploading}
-                                                    uploadButtonText={uploadButtonText}
-                                                    handleMedia={handleMedia}
-                                                    progress={progress}
-                                                    handleRemoveShowcase={handleRemoveShowcase}
+            {linkcard &&
+            
+            (<Container text>
+                <Segment.Group>
+                    <Segment>
+                        <Grid>
+                            <Grid.Row>
+                                <Grid.Column width={4}>
+                                    <Image
+                                        src={linkcard.image ? linkcard.image.Location : '/'}
+                                        size='tiny'
+                                    />
+                                </Grid.Column>
+                                <Grid.Column width={12} textAlign='left'>
+                                    <Header size='small'>
+                                        <span>
+                                            {linkcard.name}
+                                            <span style={{ marginLeft: 10 }}>
+                                                <Button 
+                                                    icon='edit outline'
+                                                    onClick={() => router.push(`/account/linkcard/edit/${slug}`)}
+                                                    color='basic'      
                                                 />
-                                            </Modal.Content>
-                                        </Modal>
+                                                <Button 
+                                                    icon='check square outline'
+                                                    onClick={() => router.push(`/account/linkcard/edit/${slug}`)}
+                                                    color='basic'      
+                                                />
+                                            </span>
+                                        </span>
+                                    </Header>
+                                    <Placeholder>
+                                        <Placeholder.Line />
+                                        <Placeholder.Line />
+                                        <Placeholder.Line />
+                                    </Placeholder>
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
+                                <Grid.Column width={16} textAlign='left'>
+                                    <ReactMarkdown children={linkcard.description} />
+                                    <Placeholder fluid>
+                                        <Placeholder.Line />
+                                        <Placeholder.Line />
+                                        <Placeholder.Line />
+                                    </Placeholder>
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
+                                <Grid.Column>
+                                    <Modal
+                                        onClose={() => setModalVisible(false)}
+                                        onOpen={() => setModalVisible(true)}
+                                        open={modalVisible}
+                                        trigger={<Button>Add Media</Button>}
+                                        //dimmer='blurring'
+                                    >
+                                        <Modal.Header>
+                                            Add Showcase Items
+                                            <Button floated='right' circular basic compact fitted size='mini' onClick={() => setModalVisible(false)}>
+                                                <Icon name='close'/>
+                                            </Button>
+                                        </Modal.Header>
+                                        <Modal.Content>
+                                            <CreateShowcaseForm
+                                                showcaseValues={showcaseValues}
+                                                setShowcaseValues={setShowcaseValues}
+                                                handleAddShowcase={handleAddShowcase}
+                                                uploading={uploading}
+                                                uploadButtonText={uploadButtonText}
+                                                handleMedia={handleMedia}
+                                                progress={progress}
+                                                handleRemoveShowcase={handleRemoveShowcase}
+                                            />
+                                        </Modal.Content>
+                                    </Modal>
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
+                            
+                            {/* {linkcard.showcases[0] && linkcard.showcases[0].title} */}
+                                        
+                            <Grid.Column textAlign='left'>
+                                    
+                                    {showCases ? (
+
+                                        linkcard.showcases.map(sc => (
+                                    <List>
+                                        <List.Item>
+                                        <List.Icon name='marker' />
+                                        <List.Content>
+                                            <List.Header as='a'>{sc.title}</List.Header>
+                                            <List.Description>
+                                                {sc.content}
+                                            </List.Description>
+                                        </List.Content>
+                                        </List.Item>
+                                    </List>  
+                                        )
+                                        )
+                                    ):
+                                    (
+                                    <Placeholder>
+                                        <Placeholder.Line />
+                                        <Placeholder.Line />
+                                        <Placeholder.Line />
+                                    </Placeholder>
+                                    )
+
+                                    }
                                     </Grid.Column>
-                                </Grid.Row>
-                            </Grid>
-                        </Segment>
-                    </Segment.Group>
-                </Container>
+                            </Grid.Row>
+                        </Grid>
+                    </Segment>
+                </Segment.Group>
+            </Container>)}
 
                 <pre>view {JSON.stringify(linkcard, null, 4)}</pre>
             </div>

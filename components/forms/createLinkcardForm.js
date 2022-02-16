@@ -8,14 +8,25 @@ const options = [
 ];
 
 const CreateLinkcardForm = ({
-    handleSubmit, handleImage, handleChange, values, setValues, preview, fileName, handleImageRemove, 
+    handleSubmit,
+    handleImage,
+    handleChange,
+    values,
+    setValues,
+    preview,
+    fileName,
+    handleImageRemove,
+    editPage = false,
 }) => (
-
-        <div>
+   
+        <>
+            {values && (
                <Grid padding='true'>
         <Grid.Row centered>
             <Container>
+                { editPage ? <h1> Link Card</h1> :
                 <h1> Create New Link Card</h1>
+                }
             </Container>
         </Grid.Row>
         <Container>
@@ -127,6 +138,24 @@ const CreateLinkcardForm = ({
                         //'Image goes here'
                     )}
 
+                    {editPage && values.image &&
+                        <Image 
+                            onClick={(e) => {
+                                if (e.target.nodeName === "IMG") {
+                                } else {
+                                handleImageRemove(e);
+                                }
+                            }}
+                            src={values.image.Location}
+                            size='medium'
+                            size='tiny'
+                            label={{ as: 'a', corner: 'right', icon: 'remove circle'} }
+                            rounded
+                        />
+                    
+                    
+                    }
+
                 </Form.Group>  
                     </Segment>
                         <Form.Button
@@ -139,7 +168,8 @@ const CreateLinkcardForm = ({
                 </Form>
         </Container>
     </Grid>
-        </div>
+    )}
+    </>
 
 );
 
