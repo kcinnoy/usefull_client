@@ -47,15 +47,15 @@ export default function Navbar() {
                 </Link>
                 
                 {/* <Search /> */}
-                <Link href='/events' passHref>
+                <Link href='/account' passHref>
                     <Menu.Item
-                        name='events' 
+                        name='account' 
                         as='a'
                         header
-                        active={activeItem === '/'+'events'}
+                        active={activeItem === '/'+'account'}
                         onClick={(e) => setActiveItem(`/${e.name}`) }
                     >
-                        Events
+                        Account
                     </Menu.Item>
                 </Link>
 

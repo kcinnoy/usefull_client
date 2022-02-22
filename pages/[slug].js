@@ -74,8 +74,9 @@ const LinkcardView = () => {
         const { data } = await axios.post(`/api/linkcard/showcase/${slug}/${linkcard.account._id}`,showcaseValues );
         
         setShowcaseValues({...showcaseValues, title: '', content: '', video: {}});
-        setModalVisible(false);
+        setProgress(0);
         setUploadButtonText('Upload Media');
+        setModalVisible(false);   
         setLinkcard(data);
         toast('Showcase item added')
 
@@ -85,6 +86,7 @@ const LinkcardView = () => {
         }
     };
 
+    
     const handleMedia = async (e) => {
         try {
             setUploading(true)
@@ -101,7 +103,7 @@ const LinkcardView = () => {
                 }
             })
             console.log(data)
-            setImage(data);
+            //setImage(data);
             setShowcaseValues({...showcaseValues, video: data})
             setUploading(false)
 
@@ -134,6 +136,41 @@ const LinkcardView = () => {
         }
     }
 
+    const handlePublisher = (e) => {
+        console.log('publish btn');
+        linkcard.published ? handleUnpublish() : handlePublish()
+    }
+
+    const handlePublish = async () => {
+        try {
+            let answer = window.confirm(
+                'Publish card and make it live on the web!'
+            );
+            if(!answer) return;
+            const {data} = await axios.put(`/api/linkcard/publish/${linkcard._id}`)
+            setLinkcard(data)
+            toast('Your card is now live!')
+        } catch (err) {
+            toast('Publish card failed')
+        }
+    };
+
+    const handleUnpublish =  async () => {
+        try {
+            // Let user confirm publish
+            let answer = window.confirm(
+                'Unpublish card, no one will be able to view it'
+            );
+            if(!answer) return;
+            // send request to update linkcard 
+            const {data} = await axios.put(`/api/linkcard/unpublish/${linkcard._id}`)
+            setLinkcard(data)
+            toast('Your card has been unpublished')
+        } catch (err) {
+            toast('Unpublish card failed')
+        }
+    };
+
     return (
         <AccountRoute>
             <div>
@@ -162,7 +199,9 @@ const LinkcardView = () => {
                                                 />
                                                 <Button 
                                                     icon='check square outline'
-                                                    onClick={() => router.push(`/account/linkcard/edit/${slug}`)}
+                                                    content={linkcard.published ? 'Unpublish' : 'Publish'}
+                                                    //onClick={() => router.push(`/account/linkcard/edit/${slug}`)}
+                                                    onClick={handlePublisher}
                                                     color='basic'      
                                                 />
                                             </span>
